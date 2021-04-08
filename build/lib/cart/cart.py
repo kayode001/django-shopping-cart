@@ -30,7 +30,7 @@ class Cart(object):
                 'quantity': 1,
                 'price': price,
                 'measurement': measurement,
-                'image': product.image.url if product.image else None
+                'image': product.image
             }
         else:
             newItem = True
@@ -51,7 +51,7 @@ class Cart(object):
                     'quantity': 1,
                     'price': price,
                     'measurement': measurement,
-                    'image': product.image.url if product.image else None
+                    'image': product.image
                     }
 
         self.save()
