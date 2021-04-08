@@ -39,6 +39,7 @@ class Cart(object):
                 if key == str(product.id):
 
                     value['quantity'] = value['quantity'] + 1
+                    value['measurement'] = measurement
                     newItem = False
                     self.save()
                     break
@@ -58,6 +59,7 @@ class Cart(object):
 
     def save(self):
         # update the session cart
+        print(self.cart)
         self.session[settings.CART_SESSION_ID] = self.cart
         # mark the session as "modified" to make sure it is saved
         self.session.modified = True
