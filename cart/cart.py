@@ -15,7 +15,7 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, action=None):
+    def add(self, product, quantity=1,price=0,measurement=None, action=None):
         """
         Add a product to the cart or update its quantity.
         """
@@ -27,9 +27,10 @@ class Cart(object):
                 'userid': self.request.user.id,
                 'product_id': id,
                 'name': product.name,
-                'quantity': 1,
-                'price': str(product.price),
-                
+                'quantity': int(quantity),
+                'price': price,
+                'measurement': measurement,
+                'image': product.image
             }
         else:
             newItem = True
@@ -37,24 +38,28 @@ class Cart(object):
             for key, value in self.cart.items():
                 if key == str(product.id):
 
-                    value['quantity'] = value['quantity'] + 1
+                    value['quantity'] = int(quantity)
+                    value['measurement'] = measurement
                     newItem = False
                     self.save()
                     break
             if newItem == True:
 
                 self.cart[product.id] = {
-                    'userid': self.request,
-                    'product_id': product.id,
+                    'userid': self.request.user.id,
+                    'product_id': id,
                     'name': product.name,
-                    'quantity': 1,
-                    'price': str(product.price),
-                }
+                    'quantity': int(quantity),
+                    'price': price,
+                    'measurement': measurement,
+                    'image': product.image
+                    }
 
         self.save()
 
     def save(self):
         # update the session cart
+        print(self.cart)
         self.session[settings.CART_SESSION_ID] = self.cart
         # mark the session as "modified" to make sure it is saved
         self.session.modified = True
